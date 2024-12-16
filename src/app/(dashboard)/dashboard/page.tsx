@@ -74,14 +74,26 @@ export default function DashboardPage() {
 
   const pieData = Object.entries(vendasPorFormaPagamento).map(([name, value]) => ({
     name: name === 'CARTAO_CREDITO' ? 'Cartão' : name === 'BOLETO' ? 'Boleto' : 'Pix',
-    value
+    value,
+    label: `${name === 'CARTAO_CREDITO' ? 'Cartão' : name === 'BOLETO' ? 'Boleto' : 'Pix'}`
   }))
 
   // Produtos mais vendidos
   const produtosVendidos = sales.flatMap(sale => sale.produtos)
+
+  // Função auxiliar para encurtar nomes
+  const encurtarNome = (nome: string) => {
+    return nome.split(' ')[0]; // Pega apenas a primeira palavra
+  };
+
+  // Atualizar os dados dos gráficos
   const produtosMaisVendidos = Object.values<ProdutoVendido>(produtosVendidos.reduce((acc, prod) => {
     if (!acc[prod.nome]) {
-      acc[prod.nome] = { nome: prod.nome, quantidade: 0, valor: 0 }
+      acc[prod.nome] = { 
+        nome: encurtarNome(prod.nome), // Encurtar nome aqui
+        quantidade: 0, 
+        valor: 0 
+      }
     }
     acc[prod.nome].quantidade += prod.quantidade
     acc[prod.nome].valor += prod.quantidade * prod.precoUnitario
@@ -101,7 +113,7 @@ export default function DashboardPage() {
 
     if (!acc[prod.nome]) {
       acc[prod.nome] = { 
-        nome: prod.nome, 
+        nome: encurtarNome(prod.nome), // Encurtar nome aqui
         quantidade: 0, 
         valor: 0,
         lucro: 0 
@@ -163,13 +175,13 @@ export default function DashboardPage() {
                       cx="50%"
                       cy="50%"
                       outerRadius={100}
-                      label
+                      label={({ name }) => name}
                     >
                       {pieData.map((_, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip formatter={(value, name) => [`${value} vendas`, name]} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
