@@ -83,12 +83,7 @@ cd front-stock
 npm install
 ```
 
-3. **Configure as variáveis de ambiente**
-```bash
-cp .env.example .env.local
-```
-
-4. **Inicie o servidor de desenvolvimento**
+3. **Inicie o servidor de desenvolvimento**
 ```bash
 npm run dev
 ```
